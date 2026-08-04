@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pet Lab | Pet Mooncake Pop-Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF7E8;
+    --paper:#FFF1CF;
+    --ink:#211B17;
+    --sky:#A8D4F0;
+    --sage:#B9D7A8;
+    --punch:#E0723E;
+    --gold:#F3C86D;
+    --line:rgba(33,27,23,.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Quicksand',sans-serif;background:
+    radial-gradient(circle at top left, rgba(168,212,240,.28), transparent 38%),
+    radial-gradient(circle at 100% 0%, rgba(233,116,62,.12), transparent 26%),
+    linear-gradient(180deg, #fffaf0 0%, var(--cream) 100%);
+    color:var(--ink);overflow-x:hidden;}
+  h1,h2,h3,.display{font-family:'Baloo 2',cursive;line-height:1.05;letter-spacing:-.02em;}
+  a{color:inherit;text-decoration:none;}
+  button,input{font:inherit;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#b4532d;font-weight:700;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:2px solid var(--ink);border-radius:999px;padding:13px 20px;background:#fff;box-shadow:4px 4px 0 var(--ink);font-family:'Baloo 2',cursive;font-weight:700;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+  .btn:active{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink);}
+  .btn.primary{background:var(--punch);color:#fff;}
+  .btn.dark{background:var(--ink);color:#fff;}
+  .btn.small{padding:10px 16px;font-size:13px;box-shadow:3px 3px 0 var(--ink);}
+
+  header{position:sticky;top:0;z-index:40;background:rgba(255,247,232,.92);backdrop-filter:blur(10px);border-bottom:2px solid var(--ink);}
+  nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .logo{width:42px;height:42px;border:2px solid var(--ink);border-radius:50%;display:grid;place-items:center;background:var(--sky);font-size:22px;flex:0 0 auto;}
+  .brand h1{font-size:21px;line-height:1;}
+  .brand p{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#b4532d;margin-top:4px;}
+  .nav-links{display:flex;gap:26px;font-weight:700;font-size:14px;}
+  .nav-links a{position:relative;padding:4px 0;}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--punch);transition:width .2s ease;}
+  .nav-links a:hover::after{width:100%;}
+  @media (max-width:850px){.nav-links{display:none;}}
+
+  .marquee{background:var(--ink);color:#f7edd7;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);overflow:hidden;white-space:nowrap;}
+  .marquee-track{display:inline-block;padding:10px 0;animation:scroll 24s linear infinite;}
+  .marquee span{font-family:'Baloo 2',cursive;font-size:15px;font-weight:600;margin:0 20px;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-100%);}}
+
+  .hero{padding:72px 0 38px;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center;}
+  .hero h2{font-size:clamp(40px,5.4vw,68px);margin:14px 0 18px;}
+  .hero h2 em{font-style:normal;color:var(--punch);}
+  .hero p{font-size:18px;line-height:1.6;max-width:560px;color:#4d4036;margin-bottom:24px;}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+  .hero-meta{display:flex;gap:22px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:12px;color:#665a4f;}
+  .hero-meta b{display:block;font-family:'Baloo 2',cursive;color:var(--ink);font-size:15px;}
+  .hero-art{position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;}
+  .moon{width:min(100%,460px);aspect-ratio:1/1;border-radius:50%;border:3px solid var(--ink);background:radial-gradient(circle at 35% 30%, #cfe8fb 0%, var(--sky) 58%, #8ec0e4 100%);overflow:hidden;box-shadow:10px 10px 0 rgba(33,27,23,.08);display:flex;align-items:center;justify-content:center;position:relative;}
+  .moon svg,.moon img{width:100%;height:100%;object-fit:contain;display:block;transform:none;background:transparent;padding:0;filter:drop-shadow(0 4px 6px rgba(33,27,23,.12));}
+  .floating{position:absolute;border:2px solid var(--ink);background:#fff;border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:8px 12px;font-family:'Baloo 2',cursive;}
+  .floating.a{left:6%;top:8%;transform:rotate(-7deg);}
+  .floating.b{right:4%;bottom:12%;transform:rotate(8deg);background:var(--sage);}
+  @media (max-width:900px){.hero-grid{grid-template-columns:1fr;}.hero-art{order:-1;min-height:360px;}}
+
+  .section{padding:82px 0;}
+  .section-head{max-width:720px;margin-bottom:34px;}
+  .section-head h3{font-size:clamp(28px,3.6vw,44px);margin:10px 0 12px;}
+  .section-head p{font-size:16px;line-height:1.65;color:#4d4036;}
+  .divider{border-top:2px solid var(--ink);}
+
+  .product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .card{background:rgba(255,255,255,.72);border:2px solid var(--ink);border-radius:26px;padding:24px;box-shadow:5px 5px 0 rgba(33,27,23,.08);}
+  .cake-stage{height:160px;display:grid;place-items:center;margin:12px 0 16px;}
+  .cake{width:132px;height:132px;border:2px solid var(--ink);border-radius:50%;position:relative;box-shadow:inset 0 0 0 8px rgba(255,255,255,.4);}
+  .cake::after{content:"";position:absolute;inset:18px;border-radius:50%;border:1.5px dashed rgba(33,27,23,.35);}
+  .cake.yy{background:conic-gradient(var(--sage) 0 180deg, #f1d39c 180deg 360deg);}
+  .cake.three{background:conic-gradient(var(--sky) 0 120deg, var(--sage) 120deg 240deg, var(--punch) 240deg 360deg);}
+  .cake.four{background:conic-gradient(var(--sky) 0 90deg, var(--sage) 90deg 180deg, #f1d39c 180deg 270deg, var(--punch) 270deg 360deg);}
+  .card h4{font-size:22px;margin-bottom:8px;}
+  .card p{font-size:14px;line-height:1.55;color:#51463d;min-height:72px;}
+  .card-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1.5px dashed var(--line);padding-top:16px;margin-top:16px;}
+  .price{font-family:'Space Mono',monospace;font-weight:700;}
+  .price span{display:block;font-size:11px;font-weight:400;color:#675c52;}
+  @media (max-width:900px){.product-grid{grid-template-columns:1fr;}}
+
+  .custom-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,320px);gap:18px;align-items:start;}
+  .custom-stack{display:grid;gap:22px;}
+  .custom-preview{position:sticky;top:94px;background:#fff;border:2px solid var(--ink);border-radius:24px;padding:18px;box-shadow:6px 6px 0 rgba(33,27,23,.08);}
+  .custom-preview h4{font-family:'Baloo 2',cursive;font-size:24px;margin-bottom:6px;}
+  .custom-preview p{font-size:12px;line-height:1.55;color:#5b5046;margin-bottom:12px;}
+  .custom-preview .preview-stage{background:#fff9ef;border:1.5px dashed rgba(33,27,23,.16);border-radius:18px;padding:12px;}
+  @media (max-width:540px){.custom-layout{grid-template-columns:1fr;}.custom-preview{position:static;}}
+  .control-card{background:rgba(255,255,255,.76);border:2px solid var(--ink);border-radius:24px;padding:22px;}
+  .control-card h4{font-size:20px;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+  .num{width:30px;height:30px;border-radius:50%;background:var(--sky);border:2px solid var(--ink);display:grid;place-items:center;font-size:14px;flex:0 0 auto;}
+  .lead{font-size:14px;color:#51463d;margin-bottom:14px;}
+  .control-row{display:flex;flex-wrap:wrap;gap:10px;}
+  .chip{border:2px solid var(--ink);background:#fff;border-radius:999px;padding:9px 14px;cursor:pointer;font-weight:700;font-size:13px;transition:transform .12s ease, background .12s ease;}
+  .chip.active{background:var(--sage);}
+  .preference-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;}
+  .preference-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center;border:2px solid var(--ink);background:#fff;border-radius:16px;padding:10px 12px;cursor:pointer;font-weight:700;font-size:12px;transition:transform .12s ease, background .12s ease;min-height:48px;}
+  .preference-btn .emoji{font-size:16px;line-height:1;flex:0 0 auto;}
+  .preference-btn.active{background:var(--sage);}
+  .shape-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .shape{border:2px solid var(--ink);border-radius:16px;padding:14px 10px;background:#fff;cursor:pointer;text-align:center;}
+  .shape.active{background:var(--sky);}
+  .shape .ico{font-size:28px;line-height:1;margin-bottom:6px;}
+  .shape .lbl{font-size:12px;font-weight:700;}
+  .letters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .letters input{width:48px;height:48px;border:2px solid var(--ink);border-radius:10px;text-align:center;font-family:'Baloo 2',cursive;font-size:20px;text-transform:uppercase;background:#fff;}
+  .letters input::placeholder{color:#b9ad9f;}
+  .counter{font-family:'Space Mono',monospace;font-size:12px;color:#b4532d;font-weight:700;}
+  .pill-note{margin-top:14px;padding:10px 12px;border:1.5px dashed #b4532d;border-radius:12px;background:#fff7ea;font-size:12px;color:#9f4d2f;line-height:1.45;}
+
+  .wizard{background:var(--ink);color:#f8efdd;border-radius:32px;padding:46px 42px;position:relative;overflow:hidden;}
+  .wizard::before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:var(--punch);opacity:.12;top:-120px;right:-110px;}
+  .wizard-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap;margin-bottom:28px;position:relative;z-index:1;}
+  .wizard-head h3{font-size:clamp(26px,3vw,34px);color:#f8efdd;margin-top:8px;}
+  .steps{display:flex;gap:18px;flex-wrap:wrap;}
+  .step{display:flex;align-items:center;gap:8px;opacity:.45;font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;}
+  .step.on{opacity:1;}
+  .step .dot{width:24px;height:24px;border-radius:50%;border:2px solid #f8efdd;display:grid;place-items:center;font-size:11px;font-weight:700;}
+  .step.on .dot{background:var(--punch);border-color:var(--punch);}
+  .panel{background:#fff9ef;color:var(--ink);border-radius:24px;padding:28px;min-height:440px;position:relative;z-index:1;}
+  .page{display:none;}
+  .page.active{display:block;animation:fade .28s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .page-title{font-family:'Baloo 2',cursive;font-size:24px;margin-bottom:6px;}
+  .page-desc{font-size:13px;color:#5b5046;margin-bottom:18px;line-height:1.55;}
+  .field-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:16px;}
+  @media (max-width:600px){.field-grid{grid-template-columns:1fr;}}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field label{font-size:12px;font-weight:700;}
+  .field input,.field select{border:2px solid var(--ink);border-radius:12px;padding:11px 12px;background:#fff;}
+  .set-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+  .set{border:2px solid var(--ink);border-radius:16px;padding:14px;background:#fff;cursor:pointer;text-align:center;}
+  .set.active{background:var(--sky);}
+  .set b{display:block;font-family:'Baloo 2',cursive;}
+  .set small{font-family:'Space Mono',monospace;color:#675c52;}
+  .flavor-picks{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  @media (max-width:700px){.flavor-picks{grid-template-columns:1fr;}}
+  .flavor{border:2px solid var(--ink);border-radius:16px;padding:14px;background:#fff;cursor:pointer;}
+  .flavor.active{background:var(--sage);}
+  .flavor .name{font-family:'Baloo 2',cursive;font-size:16px;margin-bottom:2px;}
+  .flavor .ing{font-size:11px;color:#675c52;}
+  .why{margin-top:12px;padding:11px 14px;border:1.5px dashed var(--punch);border-radius:12px;background:#fff8ef;font-size:12px;line-height:1.5;color:#9f4d2f;}
+  .actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:24px;flex-wrap:wrap;}
+  .link{font-family:'Baloo 2',cursive;font-weight:700;color:#6a5f56;cursor:pointer;}
+  .summary-list{display:grid;gap:14px;}
+  .summary-item{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;align-items:center;padding:14px;border:2px solid var(--ink);border-radius:20px;background:#fff;box-shadow:4px 4px 0 rgba(33,27,23,.06);}
+  .summary-thumb{display:flex;align-items:center;justify-content:center;}
+  .summary-thumb .preview-stage{width:100%;max-width:92px;}
+  .summary-thumb .preview-svg{max-width:92px;}
+  .summary-copy{min-width:0;}
+  .summary-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;font-family:'Baloo 2',cursive;font-size:18px;}
+  .summary-title b{font-size:20px;}
+  .summary-meta{font-size:13px;line-height:1.5;color:#51463d;word-break:break-word;}
+  .summary-row{display:flex;justify-content:space-between;gap:18px;padding:10px 0;border-bottom:1px dashed rgba(33,27,23,.16);font-size:13px;}
+  .summary-row b{font-family:'Baloo 2',cursive;}
+  .summary-total{display:flex;justify-content:space-between;gap:18px;padding-top:14px;margin-top:14px;border-top:2px solid var(--ink);font-family:'Baloo 2',cursive;font-size:20px;}
+  .workshop-toggle{margin-top:18px;background:#fff3cf;border:1.5px dashed var(--punch);border-radius:16px;padding:14px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;}
+  .workshop-toggle p{font-size:12px;color:#6a5f56;}
+  .workshop-toggle label{font-weight:700;display:flex;align-items:center;gap:8px;}
+
+  .slot-layout{display:grid;grid-template-columns:minmax(250px,280px) minmax(320px,1fr);gap:18px;align-items:start;}
+  .slot-preview{border:2px solid var(--ink);border-radius:20px;padding:16px;background:#fff;position:sticky;top:94px;}
+  .preview-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#b4532d;font-weight:700;margin-bottom:10px;}
+  .preview-stage{display:flex;justify-content:center;}
+  .preview-svg{width:100%;max-width:360px;height:auto;display:block;}
+  .preview-round{max-width:340px;}
+  .preview-bone{max-width:360px;}
+  .preview-paw{max-width:340px;}
+
+  .slot-card{border:2px solid var(--ink);border-radius:20px;background:#fff;padding:18px;margin-bottom:16px;}
+  .slot-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .slot-badge{width:34px;height:34px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);display:grid;place-items:center;font-family:'Baloo 2',cursive;}
+  .slot-title{font-family:'Baloo 2',cursive;font-size:17px;}
+  .slot-controls{min-width:0;}
+
+  footer{background:var(--ink);color:#f7edd7;padding:54px 0 28px;margin-top:22px;}
+  .footer-grid{display:flex;justify-content:space-between;gap:28px;flex-wrap:wrap;}
+  .footer-grid h4{font-family:'Baloo 2',cursive;font-size:24px;color:#fff;margin-bottom:6px;}
+  .footer-grid p{max-width:420px;font-size:13px;line-height:1.7;color:#c8bea9;}
+  .footer-links{display:flex;gap:40px;flex-wrap:wrap;}
+  .footer-links a{display:block;margin-bottom:10px;font-weight:700;}
+  .footer-bottom{margin-top:28px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:#9c9180;}
+
+  @media (max-width:860px){
+    .slot-layout{grid-template-columns:1fr;}
+    .slot-preview{position:static;order:-1;margin-bottom:14px;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <nav class="wrap">
+    <div class="brand">
+      <div class="logo">🐾</div>
+      <div>
+        <h1>Pet Lab</h1>
+        <p>by ElevateFoods Technology</p>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#offerings">Offerings</a>
+      <a href="#quiz">Pre-Order</a>
+      <a href="#workshop">Workshop</a>
+    </div>
+    <a class="btn primary small" href="#quiz">Start Pre-Order</a>
+  </nav>
+</header>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>🌕 MID-AUTUMN FOR YOUR FURRY BEST</span>
+    <span>🐶 3D-PRINTED PET MOONCAKES</span>
+    <span>🧪 PET LAB BY ELEVATEFOODS TECHNOLOGY</span>
+    <span>🌕 MID-AUTUMN FOR YOUR FURRY BEST</span>
+    <span>🐶 3D-PRINTED PET MOONCAKES</span>
+    <span>🧪 PET LAB BY ELEVATEFOODS TECHNOLOGY</span>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Pet Mooncake Pop-Up · Mid-Autumn 2026</div>
+      <h2>Mooncakes, <em>baked for your best boy</em>.</h2>
+      <p>Fresh-baked, 3D-printed mooncakes personalized to your dog or cat. Choose a set size, pick ingredients, then stamp a shape, icon, or letters on the final design.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#quiz">🐾 Start Pre-Order</a>
+      </div>
+      <div class="hero-meta">
+        <div><b>3</b>set sizes</div>
+        <div><b>1</b>live preview</div>
+        <div><b>0</b>default stamps</div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="moon">
+        <img src="dog.png" alt="Illustrated dog" />
+      </div>
+      <div class="floating a">🌼 Lotus</div>
+      <div class="floating b">🐇 Rabbit</div>
+    </div>
+  </div>
+</section>
+
+<section id="offerings" class="section divider">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Product Offerings</div>
+      <h3>Pick a set, then make it theirs</h3>
+      <p>Every mooncake is molded fresh and finished with a clean visual language. The 3-set visual now matches the 2-set and 4-set style, so the lineup reads as one family.</p>
+    </div>
+    <div class="product-grid">
+      <div class="card">
+        <div class="cake-stage"><div class="cake yy"></div></div>
+        <h4>2-Set Yin-Yang</h4>
+        <p>Two inverse flavors, one for each mooncake. This set is ideal if you want a simple pairing with a strong visual story.</p>
+        <div class="card-foot"><div class="price">HK$ 128<span>per box of 2</span></div><a class="btn dark small" href="#quiz" data-set="yy">Customize</a></div>
+      </div>
+      <div class="card">
+        <div class="cake-stage"><div class="cake three"></div></div>
+        <h4>3-Set Box</h4>
+        <p>Three mooncakes, three flavor choices, and one shared customization flow. The three-way segmented visual now feels aligned with the other set sizes.</p>
+        <div class="card-foot"><div class="price">HK$ 178<span>per box of 3</span></div><a class="btn dark small" href="#quiz" data-set="s3">Customize</a></div>
+      </div>
+      <div class="card">
+        <div class="cake-stage"><div class="cake four"></div></div>
+        <h4>4-Set Box</h4>
+        <p>The biggest set for sharing, gifting, or building a full pet-family assortment. Each mooncake can still be shaped and stamped independently.</p>
+        <div class="card-foot"><div class="price">HK$ 228<span>per box of 4</span></div><a class="btn dark small" href="#quiz" data-set="s4">Customize</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quiz" class="section divider">
+  <div class="wrap">
+    <div class="wizard">
+      <div class="wizard-head">
+        <div>
+          <div class="eyebrow" style="color:#f3c86d;">Pre-Order Custom Mooncakes</div>
+          <h3>Tell us about them. We'll do the rest.</h3>
+        </div>
+        <div class="steps" id="steps"></div>
+      </div>
+      <div class="panel">
+        <div class="page active" data-page="1">
+          <div class="eyebrow">Page 1 of 4</div>
+          <div class="page-title">Choose your set &amp; tell us about them</div>
+          <div class="page-desc">This decides how many mooncakes you personalize in the next steps.</div>
+          <div class="set-row" id="setRow"></div>
+          <div class="field-grid">
+            <div class="field"><label>Pet name</label><input id="petName" type="text" placeholder="Mochi"></div>
+            <div class="field"><label>Breed</label><input id="breed" type="text" placeholder="Corgi"></div>
+            <div class="field"><label>Age</label><input id="age" type="text" placeholder="3 years"></div>
+            <div class="field"><label>Weight</label><input id="weight" type="text" placeholder="11 kg"></div>
+          </div>
+          <div class="field" style="margin-bottom:16px;">
+            <label>Flavor preference</label>
+            <div class="preference-row" id="preferenceRow"></div>
+          </div>
+          <div class="actions"><span></span><button class="btn primary small" type="button" data-next="2">Continue</button></div>
+        </div>
+
+        <div class="page" data-page="2">
+          <div class="eyebrow">Page 2 of 4</div>
+          <div class="page-title">Your flavor recommendation</div>
+          <div class="page-desc" id="recommendationText"></div>
+          <div id="recommendationPanel"></div>
+          <div class="actions"><button class="link" type="button" data-prev="1">Back</button><button class="btn primary small" type="button" data-next="3">Customize shapes</button></div>
+        </div>
+
+        <div class="page" data-page="3">
+          <div class="eyebrow">Page 3 of 4</div>
+          <div class="page-title">Shape &amp; personalization</div>
+          <div class="page-desc">Pick a silhouette per mooncake, then add an icon stamp or custom letters. The preview panel stays visible on the right.</div>
+          <div id="slotArea"></div>
+          <div class="actions"><button class="link" type="button" data-prev="2">Back</button><button class="btn primary small" type="button" data-next="4">Review order</button></div>
+        </div>
+
+        <div class="page" data-page="4">
+          <div class="eyebrow">Page 4 of 4</div>
+          <div class="page-title">Review &amp; reserve</div>
+          <div class="page-desc">Last look before we send this to the kitchen.</div>
+          <div id="summaryArea"></div>
+          <div class="workshop-toggle">
+            <div>
+              <strong>🧪 Add a 3D-Printed Mooncake Workshop session</strong>
+              <p>Come design and print this order together, with all materials included.</p>
+            </div>
+            <label><input id="addWorkshop" type="checkbox"> + HK$ 288</label>
+          </div>
+          <div class="summary-total"><span>Estimated total</span><span id="grandTotal">HK$ 0</span></div>
+          <div class="actions"><button class="link" type="button" data-prev="3">Back</button><a class="btn primary small" href="#workshop">Reserve pre-order 🐾</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="workshop" class="section divider">
+  <div class="wrap">
+    <div class="card" style="background:var(--sky);padding:32px;border-radius:28px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div class="eyebrow">Hands-On Experience</div>
+        <h3 style="font-size:clamp(24px,3vw,34px);margin:8px 0 10px;">3D-Printed Pet Mooncake Workshop</h3>
+        <p style="max-width:560px;line-height:1.65;">Design the flavor combo, watch it printed fresh, and box it on the spot. Small groups, all materials included.</p>
+      </div>
+      <a class="btn dark" href="#quiz">Reserve a session</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>Pet Lab</h4>
+        <p>Fresh made with care, for your furry best. Pet mooncakes, personalized to shape and printed fresh for Mid-Autumn.</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <a href="#offerings">Mooncake sets</a>
+          <a href="#customize">Customization</a>
+          <a href="#quiz">Pre-order</a>
+        </div>
+        <div>
+          <a href="#workshop">Workshop</a>
+          <a href="#">Instagram</a>
+          <a href="#">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Pet Lab by ElevateFoods Technology — mockup concept, not a live store.</span>
+      <span>小红书号：62207833</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const SETS = {
+  yy: { label: '2-Set Yin-Yang', slots: 2, price: 128 },
+  s3: { label: '3-Set Box', slots: 3, price: 178 },
+  s4: { label: '4-Set Box', slots: 4, price: 228 },
+};
+
+const COMBOS = {
+  digestive: {
+    title: 'Gentle Digestion',
+    why: 'High-fiber crust with lean protein filling. Good for sensitive tummies.',
+    crust: 'Purple Sweet Potato + Pumpkin',
+    filling: 'Chicken',
+    colors: ['#D9B6E8', '#F3C86D'],
+  },
+  weight: {
+    title: 'Weight Balance',
+    why: 'Lower-calorie crust, lean filling, and a clean everyday profile.',
+    crust: 'Broccoli + Pumpkin',
+    filling: 'Chicken',
+    colors: ['#B9D7A8', '#F3C86D'],
+  },
+  joint: {
+    title: 'Joint & Mobility',
+    why: 'Broccoli with a gentle filling for a more supportive everyday treat.',
+    crust: 'Broccoli',
+    filling: 'Lotus Paste + Chicken',
+    colors: ['#B9D7A8', '#C8B191'],
+  },
+  allergy: {
+    title: 'Sensitive & Simple',
+    why: 'A short ingredient list for pets with known sensitivities.',
+    crust: 'Lotus Paste',
+    filling: 'Purple Sweet Potato',
+    colors: ['#C8B191', '#D9B6E8'],
+  },
+  none: {
+    title: 'Everyday Balance',
+    why: 'A balanced all-rounder with protein-forward flavor.',
+    crust: 'Chicken + Pumpkin',
+    filling: 'Purple Sweet Potato',
+    colors: ['#F0D6B0', '#F3C86D'],
+  },
+};
+
+const PREFERENCE_OPTIONS = [
+  { id: 'digestive', emoji: '💚', label: 'Sensitive digestion' },
+  { id: 'weight', emoji: '⚖️', label: 'Weight management' },
+  { id: 'joint', emoji: '🦴', label: 'Joint / mobility' },
+  { id: 'allergy', emoji: '🌾', label: 'Food allergies' },
+  { id: 'none', emoji: '✨', label: 'No specific focus' },
+];
+
+const ICONS = [
+  { id: '', label: 'None', emoji: '·' },
+  { id: 'rabbit', label: 'Rabbit', emoji: '🐇' },
+  { id: 'moon', label: 'Moon', emoji: '🌕' },
+  { id: 'char', label: 'Character', emoji: '福' },
+  { id: 'lotus', label: 'Lotus', emoji: '🌼' },
+];
+
+const state = {
+  set: 'yy',
+  preference: 'digestive',
+  slots: [],
+  workshop: false,
+};
+
+const previewState = { shape: 'round', icon: '', letters: [] };
+const pageSteps = ['Profile', 'Flavor', 'Customize', 'Review'];
+
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[ch]));
+}
+
+function comboForPreference(pref){
+  return COMBOS[pref] || COMBOS.none;
+}
+
+function setSlotDefaults(count){
+  state.slots = Array.from({ length: count }, () => ({ flavor: state.preference, shape: 'round', icon: '', letters: '' }));
+}
+
+function buildFinalDesignPreview({ shape, icon, letters }){
+  const iconText = icon ? (ICONS.find(item => item.id === icon)?.emoji || '') : '';
+  const hasText = letters && letters.length;
+  const safeLetters = escapeHtml(letters || '');
+  const safeIcon = escapeHtml(iconText);
+
+  const assets = {
+    round: {
+      src: 'round.png',
+      viewBox: '0 0 1254 1254',
+      className: 'preview-round',
+      label: 'Round mooncake preview',
+      singleIcon: { x: 627, y: 627, size: 300 },
+      singleText: { x: 627, y: 627, size: 170 },
+      both: { icon: { x: 627, y: 470, size: 288 }, text: { x: 627, y: 805, size: 170 } },
+    },
+    bone: {
+      src: 'bone.png',
+      viewBox: '0 0 1254 1254',
+      className: 'preview-bone',
+      label: 'Bone mooncake preview',
+      singleIcon: { x: 627, y: 627, size: 168 },
+      singleText: { x: 627, y: 627, size: 124 },
+      both: { icon: { x: 462, y: 627, size: 150 }, text: { x: 794, y: 627, size: 124 } },
+    },
+    paw: {
+      src: 'paw.png',
+      viewBox: '0 0 1254 1181',
+      className: 'preview-paw',
+      label: 'Paw mooncake preview',
+      singleIcon: { x: 627, y: 610, size: 300 },
+      singleText: { x: 627, y: 610, size: 230 },
+      both: { icon: { x: 627, y: 842, size: 280 }, text: { x: 627, y: 610, size: 230 } },
+      arc: 'M425 610C520 540 734 540 829 610',
+    },
+  };
+
+  const config = assets[shape] || assets.round;
+  const singleIcon = icon ? `<text x="${config.singleIcon.x}" y="${config.singleIcon.y}" text-anchor="middle" dominant-baseline="middle" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif" font-size="${config.singleIcon.size}">${safeIcon}</text>` : '';
+  const singleText = hasText ? `<text x="${config.singleText.x}" y="${config.singleText.y}" text-anchor="middle" dominant-baseline="middle" font-family="Baloo 2, cursive" font-size="${config.singleText.size}" font-weight="700" fill="#211b17">${safeLetters}</text>` : '';
+
+  let overlay = singleIcon + singleText;
+  if(icon && hasText){
+    if(shape === 'paw'){
+      overlay = `<text font-family="Baloo 2, cursive" font-size="230" font-weight="700" fill="#211b17"><textPath href="#pawTextArc" startOffset="50%" text-anchor="middle">${safeLetters}</textPath></text><path id="pawTextArc" d="${config.arc}" fill="none" opacity="0"/><text x="${config.both.icon.x}" y="${config.both.icon.y}" text-anchor="middle" dominant-baseline="middle" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif" font-size="${config.both.icon.size}">${safeIcon}</text>`;
+    } else {
+      overlay = `<text x="${config.both.icon.x}" y="${config.both.icon.y}" text-anchor="middle" dominant-baseline="middle" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif" font-size="${config.both.icon.size}">${safeIcon}</text><text x="${config.both.text.x}" y="${config.both.text.y}" text-anchor="middle" dominant-baseline="middle" font-family="Baloo 2, cursive" font-size="${config.both.text.size}" font-weight="700" fill="#211b17">${safeLetters}</text>`;
+    }
+  }
+
+  return `<svg class="preview-svg ${config.className}" viewBox="${config.viewBox}" xmlns="http://www.w3.org/2000/svg" aria-label="${config.label}">
+    <image href="${config.src}" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" />
+    ${overlay}
+  </svg>`;
+}
+
+function renderLetterInputs(){
+  const label = document.getElementById('letterCountLabel');
+  const inputs = document.getElementById('letterInputs');
+  const letterMinus = document.getElementById('letterMinus');
+  const letterPlus = document.getElementById('letterPlus');
+  if(!label || !inputs || !letterMinus || !letterPlus) return;
+  label.textContent = `${previewState.letters.length} letter${previewState.letters.length === 1 ? '' : 's'}`;
+  inputs.innerHTML = '';
+  previewState.letters.forEach((value, index) => {
+    const input = document.createElement('input');
+    input.maxLength = 1;
+    input.placeholder = String.fromCharCode(65 + index);
+    input.value = value;
+    input.addEventListener('input', () => {
+      previewState.letters[index] = input.value.toUpperCase().slice(0, 1);
+      input.value = previewState.letters[index];
+      updatePreviewControls();
+    });
+    inputs.appendChild(input);
+  });
+  letterMinus.disabled = previewState.letters.length === 0;
+  letterPlus.disabled = previewState.letters.length === 3;
+}
+
+function updatePreviewControls(){
+  document.querySelectorAll('[data-preview-icon]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.previewIcon === previewState.icon);
+  });
+  document.querySelectorAll('[data-preview-shape]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.previewShape === previewState.shape);
+  });
+  renderCustomPreview();
+}
+
+function renderCustomPreview(){
+  const stage = document.getElementById('previewDockStage');
+  const text = document.getElementById('previewDockText');
+  if(!stage || !text) return;
+
+  stage.innerHTML = buildFinalDesignPreview({
+    shape: previewState.shape,
+    icon: previewState.icon,
+    letters: previewState.letters.join(''),
+  });
+
+  const labelParts = [previewState.shape.charAt(0).toUpperCase() + previewState.shape.slice(1)];
+  if(previewState.icon){
+    labelParts.push(ICONS.find(item => item.id === previewState.icon)?.label || 'Icon');
+  }
+  if(previewState.letters.length){
+    labelParts.push(previewState.letters.join(''));
+  }
+  text.textContent = labelParts.length > 1 ? labelParts.join(' · ') : 'Blank preview. Add letters, an icon, or choose a shape below.';
+}
+
+function renderSteps(active){
+  const steps = document.getElementById('steps');
+  steps.innerHTML = pageSteps.map((name, index) => `<div class="step ${index < active ? 'on' : ''}"><span class="dot">${index + 1}</span><span>${name}</span></div>`).join('');
+}
+
+function renderSetRow(){
+  const row = document.getElementById('setRow');
+  row.innerHTML = Object.entries(SETS).map(([id, set]) => `<div class="set ${state.set === id ? 'active' : ''}" data-set="${id}" role="button" tabindex="0"><b>${set.label}</b><small>HK$ ${set.price}</small></div>`).join('');
+}
+
+function renderPreferenceRow(){
+  const row = document.getElementById('preferenceRow');
+  if(!row) return;
+  row.innerHTML = PREFERENCE_OPTIONS.map(option => `
+    <button type="button" class="preference-btn ${state.preference === option.id ? 'active' : ''}" data-preference="${option.id}">
+      <span class="emoji">${option.emoji}</span>
+      <span>${option.label}</span>
+    </button>
+  `).join('');
+}
+
+function renderRecommendation(){
+  const combo = comboForPreference(state.preference);
+  document.getElementById('recommendationText').textContent = `Based on the profile you gave us, we would suggest ${combo.title.toLowerCase()}.`;
+  document.getElementById('recommendationPanel').innerHTML = `
+    <div class="card" style="background:#fff;border-radius:18px;">
+      <div class="summary-row"><span><b>Crust</b></span><span>${combo.crust}</span></div>
+      <div class="summary-row"><span><b>Filling</b></span><span>${combo.filling}</span></div>
+      <div class="why">Why this pick: ${combo.why}</div>
+    </div>`;
+}
+
+function refreshSlotPreview(slotIndex){
+  const card = document.querySelector(`.slot-card[data-slot-index="${slotIndex}"]`);
+  if(!card) return;
+  const previewStage = card.querySelector('.preview-stage');
+  if(previewStage){
+    previewStage.innerHTML = buildFinalDesignPreview(state.slots[slotIndex]);
+  }
+}
+
+function renderSlotArea(){
+  const area = document.getElementById('slotArea');
+  area.innerHTML = state.slots.map((slot, index) => {
+    const preview = buildFinalDesignPreview(slot);
+    const iconOptions = ICONS.map(item => `<button type="button" class="chip ${slot.icon === item.id ? 'active' : ''}" data-slot-icon="${index}" data-icon="${item.id}">${item.label === 'None' ? 'None' : `${item.emoji} ${item.label}`}</button>`).join('');
+    return `
+      <div class="slot-card" data-slot-index="${index}">
+        <div class="slot-head"><div class="slot-badge">${index + 1}</div><div class="slot-title">Mooncake ${index + 1}</div></div>
+        <div class="slot-layout">
+          <div class="slot-controls">
+            <div class="lead"><b>Silhouette</b></div>
+            <div class="shape-row">
+              <button type="button" class="shape ${slot.shape === 'round' ? 'active' : ''}" data-slot-shape="${index}" data-shape="round"><div class="ico">🌕</div><div class="lbl">Round</div></button>
+              <button type="button" class="shape ${slot.shape === 'bone' ? 'active' : ''}" data-slot-shape="${index}" data-shape="bone"><div class="ico">🦴</div><div class="lbl">Bone</div></button>
+              <button type="button" class="shape ${slot.shape === 'paw' ? 'active' : ''}" data-slot-shape="${index}" data-shape="paw"><div class="ico">🐾</div><div class="lbl">Paw</div></button>
+            </div>
+            <div class="lead" style="margin-top:14px;"><b>Personalize with</b></div>
+            <div class="control-row" style="margin-bottom:10px;">${iconOptions}</div>
+            <div class="field">
+              <label>Letters</label>
+              <input type="text" maxlength="3" value="${escapeHtml(slot.letters)}" placeholder="ABC" data-slot-letters="${index}">
+            </div>
+            <div class="pill-note">Round, bone, and paw can all use icon stamps and letters. The preview adjusts placement by shape.</div>
+          </div>
+          <div class="slot-preview">
+            <div class="preview-label">Live preview</div>
+            <div class="preview-stage">${preview}</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderSummary(){
+  const area = document.getElementById('summaryArea');
+  area.innerHTML = `<div class="summary-list">${state.slots.map((slot, index) => {
+    const preview = buildFinalDesignPreview(slot);
+    const combo = comboForPreference(state.preference);
+    const iconLabel = slot.icon ? ICONS.find(item => item.id === slot.icon)?.label : 'None';
+    const details = [slot.shape, slot.icon ? iconLabel : 'None', slot.letters || 'None'];
+    return `
+      <div class="summary-item">
+        <div class="summary-thumb">
+          <div class="preview-stage">${preview}</div>
+        </div>
+        <div class="summary-copy">
+          <div class="summary-title"><span>Mooncake ${index + 1}</span><b>${combo.title}</b></div>
+          <div class="summary-meta"><b>${details[0]}</b> · ${details[1]} · ${details[2]}</div>
+        </div>
+      </div>`;
+  }).join('')}</div>`;
+  const total = SETS[state.set].price + (document.getElementById('addWorkshop').checked ? 288 : 0);
+  document.getElementById('grandTotal').textContent = `HK$ ${total}`;
+}
+
+function showPage(pageNumber){
+  document.querySelectorAll('.page').forEach(page => page.classList.toggle('active', page.dataset.page === String(pageNumber)));
+  renderSteps(pageNumber);
+  if(pageNumber === 2) renderRecommendation();
+  if(pageNumber === 3) renderSlotArea();
+  if(pageNumber === 4) renderSummary();
+  const activePage = document.querySelector(`.page[data-page="${pageNumber}"]`);
+  activePage?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function syncPreviewPanel(){
+  const firstSlot = state.slots[0] || { shape: previewState.shape, icon: previewState.icon, letters: previewState.letters.join('') };
+  const previewTarget = document.getElementById('slotArea');
+  if(previewTarget && document.querySelector('.page[data-page="3"].active')) renderSlotArea();
+  if(document.querySelector('.page[data-page="3"].active')) renderSlotArea();
+}
+
+function refreshPage3IfOpen(){
+  if(document.querySelector('.page[data-page="3"].active')) renderSlotArea();
+}
+
+function init(){
+  state.slots = Array.from({ length: SETS[state.set].slots }, () => ({ shape: 'round', icon: '', letters: '' }));
+
+  renderSteps(1);
+  renderSetRow();
+  renderRecommendation();
+  renderPreferenceRow();
+  const hasMainPreviewControls = Boolean(document.getElementById('letterCountLabel'));
+  if(hasMainPreviewControls){
+    renderLetterInputs();
+    renderCustomPreview();
+    updatePreviewControls();
+    document.getElementById('iconRow').innerHTML = ICONS.map(item => `<button type="button" class="chip ${previewState.icon === item.id ? 'active' : ''}" data-preview-icon="${item.id}">${item.id ? `${item.emoji} ${item.label}` : 'None'}</button>`).join('');
+    document.getElementById('shapeRow').innerHTML = [
+      { id: 'round', label: 'Round', emoji: '🌕' },
+      { id: 'bone', label: 'Bone', emoji: '🦴' },
+      { id: 'paw', label: 'Paw', emoji: '🐾' },
+    ].map(item => `<button type="button" class="shape ${previewState.shape === item.id ? 'active' : ''}" data-preview-shape="${item.id}"><div class="ico">${item.emoji}</div><div class="lbl">${item.label}</div></button>`).join('');
+
+    document.getElementById('letterMinus').addEventListener('click', () => {
+      if(previewState.letters.length === 0) return;
+      previewState.letters.pop();
+      renderLetterInputs();
+      updatePreviewControls();
+    });
+    document.getElementById('letterPlus').addEventListener('click', () => {
+      if(previewState.letters.length >= 3) return;
+      previewState.letters.push('');
+      renderLetterInputs();
+      updatePreviewControls();
+    });
+
+    document.getElementById('iconRow').addEventListener('click', event => {
+      const button = event.target.closest('[data-preview-icon]');
+      if(!button) return;
+      previewState.icon = previewState.icon === button.dataset.previewIcon ? '' : button.dataset.previewIcon;
+      updatePreviewControls();
+    });
+    document.getElementById('shapeRow').addEventListener('click', event => {
+      const button = event.target.closest('[data-preview-shape]');
+      if(!button) return;
+      previewState.shape = button.dataset.previewShape;
+      updatePreviewControls();
+      renderLetterInputs();
+    });
+  }
+
+  document.addEventListener('click', event => {
+    const next = event.target.closest('[data-next]');
+    if(next) showPage(Number(next.dataset.next));
+    const prev = event.target.closest('[data-prev]');
+    if(prev) showPage(Number(prev.dataset.prev));
+
+    const preferenceButton = event.target.closest('[data-preference]');
+    if(preferenceButton){
+      state.preference = preferenceButton.dataset.preference;
+      renderPreferenceRow();
+      renderRecommendation();
+      return;
+    }
+
+    const setButton = event.target.closest('[data-set]');
+    if(setButton){
+      state.set = setButton.dataset.set;
+      setSlotDefaults(SETS[state.set].slots);
+      renderSetRow();
+      if(document.querySelector('.page[data-page="3"].active')) renderSlotArea();
+      if(document.querySelector('.page[data-page="4"].active')) renderSummary();
+    }
+
+    const slotShape = event.target.closest('[data-slot-shape]');
+    if(slotShape){
+      const slot = state.slots[Number(slotShape.dataset.slotShape)];
+      if(!slot) return;
+      slot.shape = slotShape.dataset.shape;
+      renderSlotArea();
+      return;
+    }
+
+    const slotIcon = event.target.closest('[data-slot-icon]');
+    if(slotIcon){
+      const slot = state.slots[Number(slotIcon.dataset.slotIcon)];
+      if(!slot) return;
+      slot.icon = slotIcon.dataset.icon;
+      renderSlotArea();
+      return;
+    }
+  });
+
+  document.addEventListener('input', event => {
+    const slotLetters = event.target.closest('[data-slot-letters]');
+    if(slotLetters){
+      const slot = state.slots[Number(slotLetters.dataset.slotLetters)];
+      if(!slot) return;
+      slot.letters = event.target.value.toUpperCase().slice(0,3);
+      event.target.value = slot.letters;
+      refreshSlotPreview(Number(slotLetters.dataset.slotLetters));
+      return;
+    }
+  });
+
+  document.getElementById('addWorkshop').addEventListener('change', renderSummary);
+  document.getElementById('setRow').querySelector('[data-set="yy"]').classList.add('active');
+  showPage(1);
+}
+
+init();
+</script>
+</body>
+</html>
