@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pet Lab | Pet Mooncake Pop-Up</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --cream:#FFF7E8;
@@ -18,6 +18,7 @@
     --line:rgba(33,27,23,.16);
   }
   *{box-sizing:border-box;margin:0;padding:0;}
+  img{max-width:100%;height:auto;display:block;}
   html{scroll-behavior:smooth;}
   body{font-family:'Quicksand',sans-serif;background:
     radial-gradient(circle at top left, rgba(168,212,240,.28), transparent 38%),
@@ -40,6 +41,7 @@
   nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px;}
   .brand{display:flex;align-items:center;gap:12px;}
   .logo{width:42px;height:42px;border:2px solid var(--ink);border-radius:50%;display:grid;place-items:center;background:var(--sky);font-size:22px;flex:0 0 auto;}
+  .logo img{width:100%;height:100%;object-fit:contain;display:block;}
   .brand h1{font-size:21px;line-height:1;}
   .brand p{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#b4532d;margin-top:4px;}
   .nav-links{display:flex;gap:26px;font-weight:700;font-size:14px;}
@@ -64,7 +66,8 @@
   .hero-art{position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;}
   .moon{width:min(100%,460px);aspect-ratio:1/1;border-radius:50%;border:3px solid var(--ink);background:radial-gradient(circle at 35% 30%, #cfe8fb 0%, var(--sky) 58%, #8ec0e4 100%);overflow:hidden;box-shadow:10px 10px 0 rgba(33,27,23,.08);display:flex;align-items:center;justify-content:center;position:relative;}
   .moon svg,.moon img{width:100%;height:100%;object-fit:contain;display:block;transform:none;background:transparent;padding:0;filter:drop-shadow(0 4px 6px rgba(33,27,23,.12));}
-  .floating{position:absolute;border:2px solid var(--ink);background:#fff;border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:8px 12px;font-family:'Baloo 2',cursive;}
+  .floating{position:absolute;border:2px solid var(--ink);background:#fff;border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:8px 12px;font-family:'Baloo 2',cursive;display:inline-flex;align-items:center;gap:8px;}
+  .floating img{width:24px;height:24px;object-fit:contain;display:block;}
   .floating.a{left:6%;top:8%;transform:rotate(-7deg);}
   .floating.b{right:4%;bottom:12%;transform:rotate(8deg);background:var(--sage);}
   @media (max-width:900px){.hero-grid{grid-template-columns:1fr;}.hero-art{order:-1;min-height:360px;}}
@@ -108,11 +111,34 @@
   .preference-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center;border:2px solid var(--ink);background:#fff;border-radius:16px;padding:10px 12px;cursor:pointer;font-weight:700;font-size:12px;transition:transform .12s ease, background .12s ease;min-height:48px;}
   .preference-btn .emoji{font-size:16px;line-height:1;flex:0 0 auto;}
   .preference-btn.active{background:var(--sage);}
+  .field#activityField{grid-column:1 / -1;}
+  .activity-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
+  .activity-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center;border:2px solid var(--ink);background:#fff;border-radius:16px;padding:10px 8px;cursor:pointer;font-weight:700;font-size:11px;transition:transform .12s ease, background .12s ease;min-height:48px;white-space:nowrap;}
+  .activity-btn .emoji{font-size:16px;line-height:1;flex:0 0 auto;}
+  .activity-btn.active{background:var(--sky);}
+  .ingredient-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .ingredient-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  .slot-ingredient-grid{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding-bottom:4px;}
+  .slot-ingredient-grid .ingredient-btn{flex:0 0 auto;white-space:nowrap;}
+  .slot-ingredients{grid-column:1 / -1;display:grid;gap:10px;}
+  .ingredient-btn{display:flex;align-items:center;justify-content:center;gap:8px;border:2px solid var(--ink);background:#fff;border-radius:16px;padding:9px 12px;cursor:pointer;font-weight:700;font-size:12px;transition:transform .12s ease, background .12s ease;}
+  .ingredient-btn .emoji{font-size:15px;line-height:1;flex:0 0 auto;}
+  .ingredient-btn.active{background:var(--sage);}
+  .ingredient-btn.allergy-match{border-color:#b4532d;background:#fff4ea;}
+  .ingredient-btn .allergy-badge{display:inline-block;padding:2px 6px;border-radius:999px;background:rgba(180,83,45,.12);color:#9f4d2f;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;line-height:1;}
+  .allergy-chooser{margin-top:18px;}
+  .allergy-title{display:block;margin-bottom:12px;font-weight:700;}
+  .allergy-row{flex-wrap:nowrap;overflow-x:auto;gap:8px;padding-bottom:4px;justify-content:flex-start;}
+  .allergy-row .ingredient-btn{flex:0 0 auto;white-space:nowrap;min-width:max-content;padding:9px 16px;}
+  .recommended-tag{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:rgba(33,27,23,.08);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;vertical-align:middle;}
   .shape-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
   .shape{border:2px solid var(--ink);border-radius:16px;padding:14px 10px;background:#fff;cursor:pointer;text-align:center;}
   .shape.active{background:var(--sky);}
-  .shape .ico{font-size:28px;line-height:1;margin-bottom:6px;}
+  .shape .ico{font-size:28px;line-height:1;margin-bottom:6px;display:grid;place-items:center;}
+  .shape .ico img{width:44px;height:44px;object-fit:contain;display:block;}
   .shape .lbl{font-size:12px;font-weight:700;}
+  .icon-choice{width:20px;height:20px;object-fit:contain;display:block;flex:0 0 auto;}
+  .chip img, .preference-btn img, .activity-btn img{width:18px;height:18px;object-fit:contain;display:block;flex:0 0 auto;}
   .letters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
   .letters input{width:48px;height:48px;border:2px solid var(--ink);border-radius:10px;text-align:center;font-family:'Baloo 2',cursive;font-size:20px;text-transform:uppercase;background:#fff;}
   .letters input::placeholder{color:#b9ad9f;}
@@ -169,20 +195,25 @@
   .workshop-toggle p{font-size:12px;color:#6a5f56;}
   .workshop-toggle label{font-weight:700;display:flex;align-items:center;gap:8px;}
 
-  .slot-layout{display:grid;grid-template-columns:minmax(250px,280px) minmax(320px,1fr);gap:18px;align-items:start;}
-  .slot-preview{border:2px solid var(--ink);border-radius:20px;padding:16px;background:#fff;position:sticky;top:94px;}
+  .slot-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:18px;align-items:start;}
+  .slot-preview{border:2px solid var(--ink);border-radius:20px;padding:14px;background:#fff;position:sticky;top:92px;display:flex;flex-direction:column;align-items:center;max-width:340px;box-sizing:border-box;}
   .preview-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#b4532d;font-weight:700;margin-bottom:10px;}
-  .preview-stage{display:flex;justify-content:center;}
-  .preview-svg{width:100%;max-width:360px;height:auto;display:block;}
+  .preview-stage{display:flex;justify-content:center;align-items:center;width:100%;max-width:360px;margin:0 auto;overflow:hidden;padding:8px;box-sizing:border-box;}
+  .preview-stage > svg.preview-svg, .preview-stage svg, .preview-stage img {width:100% !important;max-width:320px !important;height:auto !important;display:block !important;object-fit:contain !important;}
+  .preview-svg{width:100%;max-width:320px;height:auto;display:block;}
+  /* Strong fallback to prevent any preview from overflowing */
+  .custom-preview, .slot-preview, .preview-stage, #previewDockStage, .preview-stage > * {max-width:360px !important; width:100% !important;}
+  .preview-stage svg, .preview-stage img {max-width:320px !important; width:100% !important; height:auto !important}
   .preview-round{max-width:340px;}
   .preview-bone{max-width:360px;}
   .preview-paw{max-width:340px;}
 
-  .slot-card{border:2px solid var(--ink);border-radius:20px;background:#fff;padding:18px;margin-bottom:16px;}
-  .slot-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .slot-card{border:2px solid var(--ink);border-radius:20px;background:#fff;padding:16px;margin-bottom:16px;}
+  .slot-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
   .slot-badge{width:34px;height:34px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);display:grid;place-items:center;font-family:'Baloo 2',cursive;}
   .slot-title{font-family:'Baloo 2',cursive;font-size:17px;}
-  .slot-controls{min-width:0;}
+  .slot-controls{min-width:0;display:grid;gap:10px;}
+  .slot-controls .lead{margin-bottom:2px;}
 
   footer{background:var(--ink);color:#f7edd7;padding:54px 0 28px;margin-top:22px;}
   .footer-grid{display:flex;justify-content:space-between;gap:28px;flex-wrap:wrap;}
@@ -202,7 +233,7 @@
 <header>
   <nav class="wrap">
     <div class="brand">
-      <div class="logo">🐾</div>
+      <div class="logo"><img src="paw.png" alt="Pet Lab paw icon" /></div>
       <div>
         <h1>Pet Lab</h1>
         <p>by ElevateFoods Technology</p>
@@ -210,6 +241,7 @@
     </div>
     <div class="nav-links">
       <a href="#offerings">Offerings</a>
+      <a href="#customize">Customize</a>
       <a href="#quiz">Pre-Order</a>
       <a href="#workshop">Workshop</a>
     </div>
@@ -236,6 +268,7 @@
       <p>Fresh-baked, 3D-printed mooncakes personalized to your dog or cat. Choose a set size, pick ingredients, then stamp a shape, icon, or letters on the final design.</p>
       <div class="hero-actions">
         <a class="btn primary" href="#quiz">🐾 Start Pre-Order</a>
+        <a class="btn" href="#customize">See customization</a>
       </div>
       <div class="hero-meta">
         <div><b>3</b>set sizes</div>
@@ -247,8 +280,8 @@
       <div class="moon">
         <img src="dog.png" alt="Illustrated dog" />
       </div>
-      <div class="floating a">🌼 Lotus</div>
-      <div class="floating b">🐇 Rabbit</div>
+      <div class="floating a"><img src="lotus.png" alt="Lotus icon" />Lotus</div>
+      <div class="floating b"><img src="rabbit.png" alt="Rabbit icon" />Rabbit</div>
     </div>
   </div>
 </section>
@@ -304,10 +337,12 @@
             <div class="field"><label>Breed</label><input id="breed" type="text" placeholder="Corgi"></div>
             <div class="field"><label>Age</label><input id="age" type="text" placeholder="3 years"></div>
             <div class="field"><label>Weight</label><input id="weight" type="text" placeholder="11 kg"></div>
+            <div class="field" id="activityField"></div>
           </div>
           <div class="field" style="margin-bottom:16px;">
             <label>Flavor preference</label>
             <div class="preference-row" id="preferenceRow"></div>
+            <div id="allergyChoices"></div>
           </div>
           <div class="actions"><span></span><button class="btn primary small" type="button" data-next="2">Continue</button></div>
         </div>
@@ -395,63 +430,89 @@ const SETS = {
   s4: { label: '4-Set Box', slots: 4, price: 228 },
 };
 
-const COMBOS = {
-  digestive: {
-    title: 'Gentle Digestion',
-    why: 'High-fiber crust with lean protein filling. Good for sensitive tummies.',
-    crust: 'Purple Sweet Potato + Pumpkin',
-    filling: 'Chicken',
-    colors: ['#D9B6E8', '#F3C86D'],
-  },
-  weight: {
-    title: 'Weight Balance',
-    why: 'Lower-calorie crust, lean filling, and a clean everyday profile.',
-    crust: 'Broccoli + Pumpkin',
-    filling: 'Chicken',
-    colors: ['#B9D7A8', '#F3C86D'],
-  },
-  joint: {
-    title: 'Joint & Mobility',
-    why: 'Broccoli with a gentle filling for a more supportive everyday treat.',
-    crust: 'Broccoli',
-    filling: 'Lotus Paste + Chicken',
-    colors: ['#B9D7A8', '#C8B191'],
-  },
-  allergy: {
-    title: 'Sensitive & Simple',
-    why: 'A short ingredient list for pets with known sensitivities.',
-    crust: 'Lotus Paste',
-    filling: 'Purple Sweet Potato',
-    colors: ['#C8B191', '#D9B6E8'],
-  },
-  none: {
-    title: 'Everyday Balance',
-    why: 'A balanced all-rounder with protein-forward flavor.',
-    crust: 'Chicken + Pumpkin',
-    filling: 'Purple Sweet Potato',
-    colors: ['#F0D6B0', '#F3C86D'],
-  },
+const RECOMMENDATION_RULES = {
+  digestive: [
+    { title: 'Gentle Digestion', why: 'Pumpkin crust with chicken filling keeps the recipe simple.', crust: 'Pumpkin', filling: 'Chicken' },
+    { title: 'Gentle Digestion', why: 'Purple sweet potato crust with chicken filling is another gentle option.', crust: 'Purple sweet potato', filling: 'Chicken' },
+    { title: 'Gentle Digestion', why: 'Carrot crust with chicken filling is a mild fallback.', crust: 'Carrot', filling: 'Chicken' },
+  ],
+  too_fat: [
+    { title: 'Weight Loss Support', why: 'Broccoli crust with chicken filling is a lighter everyday option.', crust: 'Broccoli', filling: 'Chicken' },
+    { title: 'Weight Loss Support', why: 'Carrot crust with chicken filling also keeps things light.', crust: 'Carrot', filling: 'Chicken' },
+    { title: 'Weight Loss Support', why: 'Pumpkin crust with chicken filling is another balanced choice.', crust: 'Pumpkin', filling: 'Chicken' },
+  ],
+  too_thin: [
+    { title: 'Weight Gain Support', why: 'Purple sweet potato crust with egg yolk filling is richer and more filling.', crust: 'Purple sweet potato', filling: 'Egg yolk' },
+    { title: 'Weight Gain Support', why: 'Pumpkin crust with egg yolk filling is also energy-dense.', crust: 'Pumpkin', filling: 'Egg yolk' },
+    { title: 'Weight Gain Support', why: 'Corn crust with chicken filling is another hearty fallback.', crust: 'Corn', filling: 'Chicken' },
+  ],
+  joint: [
+    { title: 'Joint & Mobility', why: 'Broccoli crust with egg yolk filling makes a richer supportive pick.', crust: 'Broccoli', filling: 'Egg yolk' },
+    { title: 'Joint & Mobility', why: 'Pumpkin crust with chicken filling stays gentle and simple.', crust: 'Pumpkin', filling: 'Chicken' },
+    { title: 'Joint & Mobility', why: 'Carrot crust with chicken filling is another balanced option.', crust: 'Carrot', filling: 'Chicken' },
+  ],
+  allergy: [
+    { title: 'Sensitive & Simple', why: 'Carrot crust with chicken filling avoids many common triggers.', crust: 'Carrot', filling: 'Chicken' },
+    { title: 'Sensitive & Simple', why: 'Pumpkin crust with chicken filling keeps the ingredient list short.', crust: 'Pumpkin', filling: 'Chicken' },
+    { title: 'Sensitive & Simple', why: 'Broccoli crust with chicken filling is a simple fallback.', crust: 'Broccoli', filling: 'Chicken' },
+    { title: 'Sensitive & Simple', why: 'Corn crust with chicken filling is another safe option.', crust: 'Corn', filling: 'Chicken' },
+    { title: 'Sensitive & Simple', why: 'Purple sweet potato crust with chicken filling is also simple.', crust: 'Purple sweet potato', filling: 'Chicken' },
+  ],
+  none: [
+    { title: 'Everyday Balance', why: 'Corn crust with chicken filling gives a balanced everyday profile.', crust: 'Corn', filling: 'Chicken' },
+    { title: 'Everyday Balance', why: 'Pumpkin crust with chicken filling is a classic all-rounder.', crust: 'Pumpkin', filling: 'Chicken' },
+    { title: 'Everyday Balance', why: 'Purple sweet potato crust with chicken filling is another balanced choice.', crust: 'Purple sweet potato', filling: 'Chicken' },
+  ],
 };
+
+const COMBOS = RECOMMENDATION_RULES;
 
 const PREFERENCE_OPTIONS = [
   { id: 'digestive', emoji: '💚', label: 'Sensitive digestion' },
-  { id: 'weight', emoji: '⚖️', label: 'Weight management' },
+  { id: 'too_fat', emoji: '🍔', label: 'Too fat' },
+  { id: 'too_thin', emoji: '🥗', label: 'Too thin' },
   { id: 'joint', emoji: '🦴', label: 'Joint / mobility' },
   { id: 'allergy', emoji: '🌾', label: 'Food allergies' },
   { id: 'none', emoji: '✨', label: 'No specific focus' },
 ];
 
+const INGREDIENT_CATALOG = [
+  { id: 'purple_sweet_potato', label: 'Purple sweet potato', emoji: '🍠', canCrust: true, canFilling: true },
+  { id: 'pumpkin', label: 'Pumpkin', emoji: '🎃', canCrust: true, canFilling: true },
+  { id: 'lotus', label: 'Lotus', emoji: '🌼', canCrust: false, canFilling: true },
+  { id: 'broccoli', label: 'Broccoli', emoji: '🥦', canCrust: true, canFilling: true },
+  { id: 'chicken', label: 'Chicken', emoji: '🍗', canCrust: true, canFilling: true },
+  { id: 'corn', label: 'Corn', emoji: '🌽', canCrust: true, canFilling: true },
+  { id: 'egg_yolk', label: 'Egg yolk', emoji: '🥚', canCrust: false, canFilling: true },
+  { id: 'carrot', label: 'Carrot', emoji: '🥕', canCrust: true, canFilling: true },
+];
+
+const ALLERGY_INGREDIENT_OPTIONS = INGREDIENT_CATALOG.map(item => ({ id: item.id, label: item.label }));
+
+const CRUST_OPTIONS = INGREDIENT_CATALOG.filter(item => item.canCrust).map(({ id, emoji, label }) => ({ id, emoji, label }));
+
+const FILLING_OPTIONS = INGREDIENT_CATALOG.filter(item => item.canFilling).map(({ id, emoji, label }) => ({ id, emoji, label }));
+
+const ACTIVITY_OPTIONS = [
+  { id: 'low', emoji: '🛋️', label: 'Low / relaxed' },
+  { id: 'moderate', emoji: '🐕', label: 'Moderate / everyday' },
+  { id: 'high', emoji: '🏃', label: 'High / very active' },
+  { id: 'senior', emoji: '🌷', label: 'Senior / gentle pace' },
+];
+
 const ICONS = [
-  { id: '', label: 'None', emoji: '·' },
-  { id: 'rabbit', label: 'Rabbit', emoji: '🐇' },
-  { id: 'moon', label: 'Moon', emoji: '🌕' },
-  { id: 'char', label: 'Character', emoji: '福' },
-  { id: 'lotus', label: 'Lotus', emoji: '🌼' },
+  { id: '', label: 'None', image: '' },
+  { id: 'rabbit', label: 'Rabbit', image: 'rabbit.png' },
+  { id: 'moon', label: 'Moon', image: 'moon.png' },
+  { id: 'char', label: 'Character', image: 'fu.png' },
+  { id: 'lotus', label: 'Lotus', image: 'lotus.png' },
 ];
 
 const state = {
   set: 'yy',
-  preference: 'digestive',
+  preference: ['digestive'],
+  allergiesSelected: [],
+  activityLevel: 'moderate',
   slots: [],
   workshop: false,
 };
@@ -464,18 +525,122 @@ function escapeHtml(value){
 }
 
 function comboForPreference(pref){
-  return COMBOS[pref] || COMBOS.none;
+  return safeComboForPreferences(pref);
+}
+
+function crustColorForLabel(crustLabel){
+  const crustPalette = {
+    'Purple sweet potato': '#D9B6E8',
+    'Pumpkin': '#F3C86D',
+    'Broccoli': '#B9D7A8',
+    'Lotus': '#C8B191',
+    'Chicken': '#F0D6B0',
+    'Corn': '#F4D07C',
+    'Egg yolk': '#F7C96B',
+    'Carrot': '#F2A76B',
+  };
+  return crustPalette[crustLabel] || '#F3C86D';
+}
+
+function getIngredientIdsForLabel(label){
+  if(!label) return [];
+  const ingredientLookup = {
+    'purple sweet potato': 'purple_sweet_potato',
+    'pumpkin': 'pumpkin',
+    'lotus': 'lotus',
+    'lotus paste': 'lotus',
+    'broccoli': 'broccoli',
+    'chicken': 'chicken',
+    'corn': 'corn',
+    'egg yolk': 'egg_yolk',
+    'carrot': 'carrot',
+    'purple sweet potato + pumpkin': 'purple_sweet_potato',
+    'broccoli + pumpkin': 'broccoli',
+    'chicken + pumpkin': 'chicken',
+    'lotus paste + chicken': 'lotus',
+    'purple sweet potato + chicken': 'purple_sweet_potato',
+  };
+
+  return label
+    .split(' + ')
+    .map(part => ingredientLookup[part.trim().toLowerCase()])
+    .filter(Boolean);
+}
+
+function labelForIngredientId(id){
+  return INGREDIENT_CATALOG.find(item => item.id === id)?.label || id;
+}
+
+function allowedIngredientsForRole(role){
+  return INGREDIENT_CATALOG.filter(item => item[role]).map(item => item.label);
+}
+
+function createFallbackRecommendation(allergies){
+  const crust = CRUST_OPTIONS.find(item => !hasAllergyConflict(item.label, allergies));
+  const filling = FILLING_OPTIONS.find(item => !hasAllergyConflict(item.label, allergies));
+  return {
+    title: 'Sensitive & Simple',
+    why: 'We picked ingredients that avoid the selected allergies.',
+    crust: crust?.label || 'Pumpkin',
+    filling: filling?.label || 'Chicken',
+  };
+}
+
+function hasAllergyConflict(label, allergies = state.allergiesSelected){
+  if(!label || !allergies.length) return false;
+  const ingredientIds = getIngredientIdsForLabel(label);
+  return ingredientIds.some(id => allergies.includes(id));
+}
+
+function safeComboForPreferences(preferences, allergies = state.allergiesSelected){
+  const preferenceList = Array.isArray(preferences) ? preferences : [preferences];
+  const orderedCandidates = [];
+  preferenceList.forEach(pref => {
+    const rules = RECOMMENDATION_RULES[pref] || RECOMMENDATION_RULES.none;
+    orderedCandidates.push(...rules);
+  });
+  if(!orderedCandidates.length){
+    orderedCandidates.push(...RECOMMENDATION_RULES.none);
+  }
+
+  const safeCandidate = orderedCandidates.find(candidate =>
+    !hasAllergyConflict(candidate.crust, allergies) &&
+    !hasAllergyConflict(candidate.filling, allergies) &&
+    CRUST_OPTIONS.some(item => item.label === candidate.crust) &&
+    FILLING_OPTIONS.some(item => item.label === candidate.filling)
+  );
+
+  return safeCandidate || createFallbackRecommendation(allergies);
 }
 
 function setSlotDefaults(count){
-  state.slots = Array.from({ length: count }, () => ({ flavor: state.preference, shape: 'round', icon: '', letters: '' }));
+  const recommended = safeComboForPreferences(state.preference);
+  state.slots = Array.from({ length: count }, () => ({
+    flavor: state.preference,
+    crust: recommended.crust,
+    filling: recommended.filling,
+    shape: 'round',
+    icon: '',
+    letters: '',
+  }));
 }
 
-function buildFinalDesignPreview({ shape, icon, letters }){
-  const iconText = icon ? (ICONS.find(item => item.id === icon)?.emoji || '') : '';
+function assetForIcon(iconId){
+  return ICONS.find(item => item.id === iconId)?.image || '';
+}
+
+function assetForShape(shapeId){
+  return { round: 'round.png', bone: 'bone.png', paw: 'paw.png' }[shapeId] || 'round.png';
+}
+
+function buildFinalDesignPreview({ shape, icon, letters, crust }){
+  const iconAsset = assetForIcon(icon);
   const hasText = letters && letters.length;
   const safeLetters = escapeHtml(letters || '');
-  const safeIcon = escapeHtml(iconText);
+  const recommendedCrust = safeComboForPreferences(state.preference).crust;
+  const baseColor = crustColorForLabel(crust || recommendedCrust);
+  const bigIconStamp = ['rabbit', 'moon', 'lotus'].includes(icon);
+  const boneFuSize = 240;
 
   const assets = {
     round: {
@@ -483,45 +648,56 @@ function buildFinalDesignPreview({ shape, icon, letters }){
       viewBox: '0 0 1254 1254',
       className: 'preview-round',
       label: 'Round mooncake preview',
-      singleIcon: { x: 627, y: 627, size: 300 },
-      singleText: { x: 627, y: 627, size: 170 },
-      both: { icon: { x: 627, y: 470, size: 288 }, text: { x: 627, y: 805, size: 170 } },
+      singleIcon: { x: 635, y: 520, size: 600 },
+      singleText: { x: 627, y: 820, size: 200 },
+      both: { icon: { x: 635, y: 520, size: 180 }, text: { x: 627, y: 880, size: 200 } },
     },
     bone: {
       src: 'bone.png',
       viewBox: '0 0 1254 1254',
       className: 'preview-bone',
       label: 'Bone mooncake preview',
-      singleIcon: { x: 627, y: 627, size: 168 },
-      singleText: { x: 627, y: 627, size: 124 },
-      both: { icon: { x: 462, y: 627, size: 150 }, text: { x: 794, y: 627, size: 124 } },
+      singleIcon: { x: 635, y: 625, size: 380 },
+      singleText: { x: 627, y: 820, size: 180 },
+      both: { icon: { x: 535, y: 625, size: 380 }, text: { x: 535, y: 620, size: 180 } },
     },
     paw: {
       src: 'paw.png',
       viewBox: '0 0 1254 1181',
       className: 'preview-paw',
       label: 'Paw mooncake preview',
-      singleIcon: { x: 627, y: 610, size: 300 },
-      singleText: { x: 627, y: 610, size: 230 },
-      both: { icon: { x: 627, y: 842, size: 280 }, text: { x: 627, y: 610, size: 230 } },
+      singleIcon: { x: 635, y: 660, size: 400 },
+      singleText: { x: 627, y: 760, size: 200 },
+      both: { icon: { x: 635, y: 800, size: 400 }, text: { x: 627, y: 540, size: 200 } },
       arc: 'M425 610C520 540 734 540 829 610',
+      arcBaseline: 610,
     },
   };
 
   const config = assets[shape] || assets.round;
-  const singleIcon = icon ? `<text x="${config.singleIcon.x}" y="${config.singleIcon.y}" text-anchor="middle" dominant-baseline="middle" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif" font-size="${config.singleIcon.size}">${safeIcon}</text>` : '';
-  const singleText = hasText ? `<text x="${config.singleText.x}" y="${config.singleText.y}" text-anchor="middle" dominant-baseline="middle" font-family="Baloo 2, cursive" font-size="${config.singleText.size}" font-weight="700" fill="#211b17">${safeLetters}</text>` : '';
+  const singleIconSize = shape === 'bone' && icon === 'char' ? boneFuSize : (shape === 'bone' ? config.singleIcon.size : (icon === 'char' ? 400 : (bigIconStamp ? 700 : config.singleIcon.size)));
+  const bothIconSize = shape === 'bone' && icon === 'char' ? boneFuSize : (shape === 'bone' ? config.both.icon.size : (icon === 'char' ? 400 : (bigIconStamp ? 700 : config.both.icon.size)));
+  const bothIconX = (shape === 'bone' && hasText) ? (config.both.icon.x - 100) : config.both.icon.x;
+  const bothTextX = (shape === 'bone' && hasText) ? (config.both.text.x + 200) : config.both.text.x;
+  const singleIconY = hasText ? config.singleIcon.y : 625;
+  const singleTextX = iconAsset ? config.singleText.x : 627;
+  const singleTextY = iconAsset ? config.singleText.y : 625;
+  const singleIcon = iconAsset ? `<image href="${iconAsset}" x="${config.singleIcon.x - singleIconSize / 2}" y="${singleIconY - singleIconSize / 2}" width="${singleIconSize}" height="${singleIconSize}" preserveAspectRatio="xMidYMid meet" />` : '';
+  const singleText = hasText ? `<text x="${singleTextX}" y="${singleTextY}" text-anchor="middle" dominant-baseline="middle" font-family="Caveat, cursive" font-size="${config.singleText.size}" font-weight="500" letter-spacing="18" fill="#211b17">${safeLetters}</text>` : '';
 
   let overlay = singleIcon + singleText;
-  if(icon && hasText){
+  if(iconAsset && hasText){
     if(shape === 'paw'){
-      overlay = `<text font-family="Baloo 2, cursive" font-size="230" font-weight="700" fill="#211b17"><textPath href="#pawTextArc" startOffset="50%" text-anchor="middle">${safeLetters}</textPath></text><path id="pawTextArc" d="${config.arc}" fill="none" opacity="0"/><text x="${config.both.icon.x}" y="${config.both.icon.y}" text-anchor="middle" dominant-baseline="middle" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif" font-size="${config.both.icon.size}">${safeIcon}</text>`;
+      const arcBaseline = config.arcBaseline || 610;
+      const dy = config.both.text.y - arcBaseline;
+      overlay = `<g transform="translate(0, ${dy})"><text font-family="Caveat, cursive" font-size="${config.both.text.size}" font-weight="500" letter-spacing="18" fill="#211b17"><textPath href="#pawTextArc" startOffset="50%" text-anchor="middle">${safeLetters}</textPath></text><path id="pawTextArc" d="${config.arc}" fill="none" opacity="0"/></g><image href="${iconAsset}" x="${bothIconX - bothIconSize / 2}" y="${config.both.icon.y - bothIconSize / 2}" width="${bothIconSize}" height="${bothIconSize}" preserveAspectRatio="xMidYMid meet" />`;
     } else {
-      overlay = `<text x="${config.both.icon.x}" y="${config.both.icon.y}" text-anchor="middle" dominant-baseline="middle" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif" font-size="${config.both.icon.size}">${safeIcon}</text><text x="${config.both.text.x}" y="${config.both.text.y}" text-anchor="middle" dominant-baseline="middle" font-family="Baloo 2, cursive" font-size="${config.both.text.size}" font-weight="700" fill="#211b17">${safeLetters}</text>`;
+      overlay = `<image href="${iconAsset}" x="${bothIconX - bothIconSize / 2}" y="${config.both.icon.y - bothIconSize / 2}" width="${bothIconSize}" height="${bothIconSize}" preserveAspectRatio="xMidYMid meet" /><text x="${bothTextX}" y="${config.both.text.y}" text-anchor="middle" dominant-baseline="middle" font-family="Caveat, cursive" font-size="${config.both.text.size}" font-weight="500" letter-spacing="18" fill="#211b17">${safeLetters}</text>`;
     }
   }
 
   return `<svg class="preview-svg ${config.className}" viewBox="${config.viewBox}" xmlns="http://www.w3.org/2000/svg" aria-label="${config.label}">
+    <rect x="0" y="0" width="100%" height="100%" fill="${baseColor}" />
     <image href="${config.src}" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" />
     ${overlay}
   </svg>`;
@@ -596,21 +772,58 @@ function renderPreferenceRow(){
   const row = document.getElementById('preferenceRow');
   if(!row) return;
   row.innerHTML = PREFERENCE_OPTIONS.map(option => `
-    <button type="button" class="preference-btn ${state.preference === option.id ? 'active' : ''}" data-preference="${option.id}">
+    <button type="button" class="preference-btn ${state.preference.includes(option.id) ? 'active' : ''}" data-preference="${option.id}">
       <span class="emoji">${option.emoji}</span>
       <span>${option.label}</span>
     </button>
   `).join('');
+
+  // render allergy ingredient choices when allergy is selected
+  const allergyContainer = document.getElementById('allergyChoices');
+  if(allergyContainer){
+    if(state.preference.includes('allergy')){
+      const ingredientOptions = ALLERGY_INGREDIENT_OPTIONS;
+      allergyContainer.innerHTML = `
+        <div class="allergy-chooser">
+          <label class="allergy-title">Allergy ingredients to avoid</label>
+          <div class="ingredient-row allergy-row" id="allergyRow">
+            ${ingredientOptions.map(opt => `<button type="button" class="ingredient-btn ${state.allergiesSelected.includes(opt.id) ? 'active' : ''}" data-allergy="${opt.id}">${opt.label}</button>`).join('')}
+          </div>
+        </div>
+        </div>
+      `;
+    } else {
+      allergyContainer.innerHTML = '';
+    }
+  }
+}
+
+function renderActivityRow(){
+  const field = document.getElementById('activityField');
+  if(!field) return;
+  field.innerHTML = `
+    <label>Activity level</label>
+    <div class="activity-row" id="activityRow">
+      ${ACTIVITY_OPTIONS.map(option => `
+        <button type="button" class="activity-btn ${state.activityLevel === option.id ? 'active' : ''}" data-activity="${option.id}">
+          <span class="emoji">${option.emoji}</span>
+          <span>${option.label}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
 }
 
 function renderRecommendation(){
-  const combo = comboForPreference(state.preference);
+  const combo = safeComboForPreferences(state.preference);
+  const conflictCount = getIngredientIdsForLabel(combo.crust).filter(id => state.allergiesSelected.includes(id)).length + getIngredientIdsForLabel(combo.filling).filter(id => state.allergiesSelected.includes(id)).length;
   document.getElementById('recommendationText').textContent = `Based on the profile you gave us, we would suggest ${combo.title.toLowerCase()}.`;
   document.getElementById('recommendationPanel').innerHTML = `
     <div class="card" style="background:#fff;border-radius:18px;">
-      <div class="summary-row"><span><b>Crust</b></span><span>${combo.crust}</span></div>
-      <div class="summary-row"><span><b>Filling</b></span><span>${combo.filling}</span></div>
+      <div class="summary-row"><span><b>Crust</b></span><span>${combo.crust}<span class="recommended-tag">recommended</span></span></div>
+      <div class="summary-row"><span><b>Filling</b></span><span>${combo.filling}<span class="recommended-tag">recommended</span></span></div>
       <div class="why">Why this pick: ${combo.why}</div>
+      ${conflictCount ? `<div class="pill-note" style="margin:12px 18px 18px;">We adjusted this recommendation to avoid the ingredients you marked as allergies.</div>` : ''}
     </div>`;
 }
 
@@ -625,9 +838,22 @@ function refreshSlotPreview(slotIndex){
 
 function renderSlotArea(){
   const area = document.getElementById('slotArea');
+  const recommended = safeComboForPreferences(state.preference);
   area.innerHTML = state.slots.map((slot, index) => {
     const preview = buildFinalDesignPreview(slot);
-    const iconOptions = ICONS.map(item => `<button type="button" class="chip ${slot.icon === item.id ? 'active' : ''}" data-slot-icon="${index}" data-icon="${item.id}">${item.label === 'None' ? 'None' : `${item.emoji} ${item.label}`}</button>`).join('');
+    const iconOptions = ICONS.map(item => `<button type="button" class="chip ${slot.icon === item.id ? 'active' : ''}" data-slot-icon="${index}" data-icon="${item.id}">${item.id ? `<img src="${item.image}" alt="${item.label}" class="icon-choice" /><span>${item.label}</span>` : 'None'}</button>`).join('');
+    const crustConflict = hasAllergyConflict(slot.crust);
+    const fillingConflict = hasAllergyConflict(slot.filling);
+    const crustOptions = CRUST_OPTIONS.map(item => {
+      const allergyMatch = hasAllergyConflict(item.label);
+      return `<button type="button" class="ingredient-btn ${slot.crust === item.label ? 'active' : ''} ${allergyMatch ? 'allergy-match' : ''}" data-slot-crust="${index}" data-crust="${item.label}">${item.emoji} ${item.label}${allergyMatch ? '<span class="allergy-badge">allergy</span>' : ''}${item.label === recommended.crust && !allergyMatch ? '<span class="recommended-tag">recommended</span>' : ''}</button>`;
+    }).join('');
+    const fillingOptions = FILLING_OPTIONS.map(item => {
+      const allergyMatch = hasAllergyConflict(item.label);
+      return `<button type="button" class="ingredient-btn ${slot.filling === item.label ? 'active' : ''} ${allergyMatch ? 'allergy-match' : ''}" data-slot-filling="${index}" data-filling="${item.label}">${item.emoji} ${item.label}${allergyMatch ? '<span class="allergy-badge">allergy</span>' : ''}${item.label === recommended.filling && !allergyMatch ? '<span class="recommended-tag">recommended</span>' : ''}</button>`;
+    }).join('');
+    const crustHint = crustConflict ? `<div class="pill-note">Allergy hint: this crust includes ${getIngredientIdsForLabel(slot.crust).filter(id => state.allergiesSelected.includes(id)).map(labelForIngredientId).join(', ')}.</div>` : '';
+    const fillingHint = fillingConflict ? `<div class="pill-note">Allergy hint: this filling includes ${getIngredientIdsForLabel(slot.filling).filter(id => state.allergiesSelected.includes(id)).map(labelForIngredientId).join(', ')}.</div>` : '';
     return `
       <div class="slot-card" data-slot-index="${index}">
         <div class="slot-head"><div class="slot-badge">${index + 1}</div><div class="slot-title">Mooncake ${index + 1}</div></div>
@@ -635,21 +861,29 @@ function renderSlotArea(){
           <div class="slot-controls">
             <div class="lead"><b>Silhouette</b></div>
             <div class="shape-row">
-              <button type="button" class="shape ${slot.shape === 'round' ? 'active' : ''}" data-slot-shape="${index}" data-shape="round"><div class="ico">🌕</div><div class="lbl">Round</div></button>
-              <button type="button" class="shape ${slot.shape === 'bone' ? 'active' : ''}" data-slot-shape="${index}" data-shape="bone"><div class="ico">🦴</div><div class="lbl">Bone</div></button>
-              <button type="button" class="shape ${slot.shape === 'paw' ? 'active' : ''}" data-slot-shape="${index}" data-shape="paw"><div class="ico">🐾</div><div class="lbl">Paw</div></button>
+              <button type="button" class="shape ${slot.shape === 'round' ? 'active' : ''}" data-slot-shape="${index}" data-shape="round"><div class="ico"><img src="round.png" alt="Round mooncake silhouette" /></div><div class="lbl">Round</div></button>
+              <button type="button" class="shape ${slot.shape === 'bone' ? 'active' : ''}" data-slot-shape="${index}" data-shape="bone"><div class="ico"><img src="bone.png" alt="Bone mooncake silhouette" /></div><div class="lbl">Bone</div></button>
+              <button type="button" class="shape ${slot.shape === 'paw' ? 'active' : ''}" data-slot-shape="${index}" data-shape="paw"><div class="ico"><img src="paw.png" alt="Paw mooncake silhouette" /></div><div class="lbl">Paw</div></button>
             </div>
             <div class="lead" style="margin-top:14px;"><b>Personalize with</b></div>
             <div class="control-row" style="margin-bottom:10px;">${iconOptions}</div>
-            <div class="field">
-              <label>Letters</label>
-              <input type="text" maxlength="3" value="${escapeHtml(slot.letters)}" placeholder="ABC" data-slot-letters="${index}">
-            </div>
-            <div class="pill-note">Round, bone, and paw can all use icon stamps and letters. The preview adjusts placement by shape.</div>
+                <div class="field">
+                  <label>Letters</label>
+                  <input type="text" maxlength="3" value="${escapeHtml(slot.letters)}" placeholder="ABC" data-slot-letters="${index}">
+                </div>
+                <div style="height:52px;"></div>
           </div>
           <div class="slot-preview">
             <div class="preview-label">Live preview</div>
             <div class="preview-stage">${preview}</div>
+          </div>
+          <div class="slot-ingredients">
+            <div class="lead"><b>Crust ingredients</b></div>
+            <div class="ingredient-grid slot-ingredient-grid" style="margin-bottom:10px;">${crustOptions}</div>
+            ${crustHint}
+            <div class="lead"><b>Filling ingredients</b></div>
+            <div class="ingredient-grid slot-ingredient-grid" style="margin-bottom:10px;">${fillingOptions}</div>
+            ${fillingHint}
           </div>
         </div>
       </div>`;
@@ -658,11 +892,20 @@ function renderSlotArea(){
 
 function renderSummary(){
   const area = document.getElementById('summaryArea');
-  area.innerHTML = `<div class="summary-list">${state.slots.map((slot, index) => {
+  const activityLabel = {
+    low: 'Low / relaxed',
+    moderate: 'Moderate / everyday',
+    high: 'High / very active',
+    senior: 'Senior / gentle pace',
+  }[state.activityLevel] || 'Moderate / everyday';
+  area.innerHTML = `
+    <div class="summary-row"><span><b>Activity level</b></span><span>${activityLabel}</span></div>
+    ${state.preference.includes('allergy') && state.allergiesSelected.length ? `<div class="summary-row"><span><b>Allergy ingredients</b></span><span>${state.allergiesSelected.map(id => ALLERGY_INGREDIENT_OPTIONS.find(item => item.id === id)?.label || id).join(', ')}</span></div>` : ''}
+    <div class="summary-list">${state.slots.map((slot, index) => {
     const preview = buildFinalDesignPreview(slot);
-    const combo = comboForPreference(state.preference);
+    const combo = safeComboForPreferences(state.preference);
     const iconLabel = slot.icon ? ICONS.find(item => item.id === slot.icon)?.label : 'None';
-    const details = [slot.shape, slot.icon ? iconLabel : 'None', slot.letters || 'None'];
+    const details = [slot.shape, slot.crust || 'None', slot.filling || 'None', slot.icon ? iconLabel : 'None', slot.letters || 'None'];
     return `
       <div class="summary-item">
         <div class="summary-thumb">
@@ -670,7 +913,7 @@ function renderSummary(){
         </div>
         <div class="summary-copy">
           <div class="summary-title"><span>Mooncake ${index + 1}</span><b>${combo.title}</b></div>
-          <div class="summary-meta"><b>${details[0]}</b> · ${details[1]} · ${details[2]}</div>
+          <div class="summary-meta"><b>${details[0]}</b> · Crust: ${details[1]} · Filling: ${details[2]} · ${details[3]} · ${details[4]}</div>
         </div>
       </div>`;
   }).join('')}</div>`;
@@ -706,17 +949,18 @@ function init(){
   renderSetRow();
   renderRecommendation();
   renderPreferenceRow();
+  renderActivityRow();
   const hasMainPreviewControls = Boolean(document.getElementById('letterCountLabel'));
   if(hasMainPreviewControls){
     renderLetterInputs();
     renderCustomPreview();
     updatePreviewControls();
-    document.getElementById('iconRow').innerHTML = ICONS.map(item => `<button type="button" class="chip ${previewState.icon === item.id ? 'active' : ''}" data-preview-icon="${item.id}">${item.id ? `${item.emoji} ${item.label}` : 'None'}</button>`).join('');
+    document.getElementById('iconRow').innerHTML = ICONS.map(item => `<button type="button" class="chip ${previewState.icon === item.id ? 'active' : ''}" data-preview-icon="${item.id}">${item.id ? `<img src="${item.image}" alt="${item.label}" class="icon-choice" /><span>${item.label}</span>` : 'None'}</button>`).join('');
     document.getElementById('shapeRow').innerHTML = [
-      { id: 'round', label: 'Round', emoji: '🌕' },
-      { id: 'bone', label: 'Bone', emoji: '🦴' },
-      { id: 'paw', label: 'Paw', emoji: '🐾' },
-    ].map(item => `<button type="button" class="shape ${previewState.shape === item.id ? 'active' : ''}" data-preview-shape="${item.id}"><div class="ico">${item.emoji}</div><div class="lbl">${item.label}</div></button>`).join('');
+      { id: 'round', label: 'Round', image: 'round.png' },
+      { id: 'bone', label: 'Bone', image: 'bone.png' },
+      { id: 'paw', label: 'Paw', image: 'paw.png' },
+    ].map(item => `<button type="button" class="shape ${previewState.shape === item.id ? 'active' : ''}" data-preview-shape="${item.id}"><div class="ico"><img src="${item.image}" alt="${item.label}" /></div><div class="lbl">${item.label}</div></button>`).join('');
 
     document.getElementById('letterMinus').addEventListener('click', () => {
       if(previewState.letters.length === 0) return;
@@ -752,11 +996,37 @@ function init(){
     const prev = event.target.closest('[data-prev]');
     if(prev) showPage(Number(prev.dataset.prev));
 
+    const activityButton = event.target.closest('[data-activity]');
+    if(activityButton){
+      state.activityLevel = activityButton.dataset.activity;
+      renderActivityRow();
+      renderSummary();
+      return;
+    }
+
     const preferenceButton = event.target.closest('[data-preference]');
     if(preferenceButton){
-      state.preference = preferenceButton.dataset.preference;
+      const id = preferenceButton.dataset.preference;
+      if(id === 'none'){
+        state.preference = ['none'];
+        state.allergiesSelected = [];
+      } else {
+        state.preference = state.preference.filter(p => p !== 'none');
+        if(state.preference.includes(id)){
+          state.preference = state.preference.filter(p => p !== id);
+        } else {
+          state.preference.push(id);
+        }
+      }
+      // ensure at least one preference remains
+      if(state.preference.length === 0) state.preference = ['none'];
+      if(!state.preference.includes('allergy')){
+        state.allergiesSelected = [];
+      }
       renderPreferenceRow();
       renderRecommendation();
+      if(document.querySelector('.page[data-page="3"].active')) renderSlotArea();
+      if(document.querySelector('.page[data-page="4"].active')) renderSummary();
       return;
     }
 
@@ -783,6 +1053,39 @@ function init(){
       const slot = state.slots[Number(slotIcon.dataset.slotIcon)];
       if(!slot) return;
       slot.icon = slotIcon.dataset.icon;
+      renderSlotArea();
+      return;
+    }
+
+    const allergyBtn = event.target.closest('[data-allergy]');
+    if(allergyBtn){
+      const item = allergyBtn.dataset.allergy;
+      if(state.allergiesSelected.includes(item)){
+        state.allergiesSelected = state.allergiesSelected.filter(i => i !== item);
+      } else {
+        state.allergiesSelected.push(item);
+      }
+      renderPreferenceRow();
+      renderRecommendation();
+      if(document.querySelector('.page[data-page="3"].active')) renderSlotArea();
+      renderSummary();
+      return;
+    }
+
+    const slotCrust = event.target.closest('[data-slot-crust]');
+    if(slotCrust){
+      const slot = state.slots[Number(slotCrust.dataset.slotCrust)];
+      if(!slot) return;
+      slot.crust = slotCrust.dataset.crust;
+      renderSlotArea();
+      return;
+    }
+
+    const slotFilling = event.target.closest('[data-slot-filling]');
+    if(slotFilling){
+      const slot = state.slots[Number(slotFilling.dataset.slotFilling)];
+      if(!slot) return;
+      slot.filling = slotFilling.dataset.filling;
       renderSlotArea();
       return;
     }
