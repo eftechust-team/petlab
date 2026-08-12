@@ -40,8 +40,8 @@
   header{position:sticky;top:0;z-index:40;background:rgba(255,247,232,.92);backdrop-filter:blur(10px);border-bottom:2px solid var(--ink);}
   nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px;}
   .brand{display:flex;align-items:center;gap:12px;}
-  .logo{width:42px;height:42px;border:2px solid var(--ink);border-radius:50%;display:grid;place-items:center;background:var(--sky);font-size:22px;flex:0 0 auto;}
-  .logo img{width:100%;height:100%;object-fit:contain;display:block;}
+  .logo{width:54px;height:54px;border:none;border-radius:0;display:grid;place-items:center;background:transparent;font-size:22px;flex:0 0 auto;padding:0;}
+  .logo img{width:100%;height:100%;object-fit:contain;display:block;transform:scale(1.08);}
   .brand h1{font-size:21px;line-height:1;}
   .brand p{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#b4532d;margin-top:4px;}
   .nav-links{display:flex;gap:26px;font-weight:700;font-size:14px;}
@@ -142,6 +142,7 @@
   .letters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
   .letters input{width:48px;height:48px;border:2px solid var(--ink);border-radius:10px;text-align:center;font-family:'Baloo 2',cursive;font-size:20px;text-transform:uppercase;background:#fff;}
   .letters input::placeholder{color:#b9ad9f;}
+  .letters button.mini-btn{width:32px;height:32px;border:2px solid var(--ink);border-radius:10px;background:#fff;cursor:pointer;font-size:22px;line-height:1;display:grid;place-items:center;font-weight:700;}
   .counter{font-family:'Space Mono',monospace;font-size:12px;color:#b4532d;font-weight:700;}
   .pill-note{margin-top:14px;padding:10px 12px;border:1.5px dashed #b4532d;border-radius:12px;background:#fff7ea;font-size:12px;color:#9f4d2f;line-height:1.45;}
 
@@ -233,7 +234,7 @@
 <header>
   <nav class="wrap">
     <div class="brand">
-      <div class="logo"><img src="paw.png" alt="Pet Lab paw icon" /></div>
+      <div class="logo"><img src="dogfoodlogo.png" alt="Pet Lab logo" /></div>
       <div>
         <h1>Pet Lab</h1>
         <p>by ElevateFoods Technology</p>
@@ -357,7 +358,7 @@
         <div class="page" data-page="3">
           <div class="eyebrow">Page 3 of 4</div>
           <div class="page-title">Shape &amp; personalization</div>
-          <div class="page-desc">Pick a silhouette per mooncake, then add an icon stamp or custom letters. The preview panel stays visible on the right.</div>
+          <div class="page-desc">Pick a silhouette per mooncake, then add an icon stamp or custom letters.</div>
           <div id="slotArea"></div>
           <div class="actions"><button class="link" type="button" data-prev="2">Back</button><button class="btn primary small" type="button" data-next="4">Review order</button></div>
         </div>
@@ -375,7 +376,7 @@
             <label><input id="addWorkshop" type="checkbox"> + HK$ 288</label>
           </div>
           <div class="summary-total"><span>Estimated total</span><span id="grandTotal">HK$ 0</span></div>
-          <div class="actions"><button class="link" type="button" data-prev="3">Back</button><a class="btn primary small" href="#workshop">Reserve pre-order 🐾</a></div>
+          <div class="actions"><button class="link" type="button" data-prev="3">Back</button><a class="btn primary small" href="#workshop" id="reservePreorderBtn">Reserve pre-order 🐾</a></div>
         </div>
       </div>
     </div>
@@ -515,6 +516,8 @@ const state = {
   slots: [],
   workshop: false,
 };
+
+window.PETLAB_STATE = state;
 
 const previewState = { shape: 'round', icon: '', letters: [] };
 const pageSteps = ['Profile', 'Flavor', 'Customize', 'Review'];
@@ -897,14 +900,15 @@ function renderSummary(){
     high: 'High / very active',
     senior: 'Senior / gentle pace',
   }[state.activityLevel] || 'Moderate / everyday';
+  const recommended = safeComboForPreferences(state.preference);
   area.innerHTML = `
     <div class="summary-row"><span><b>Activity level</b></span><span>${activityLabel}</span></div>
     ${state.preference.includes('allergy') && state.allergiesSelected.length ? `<div class="summary-row"><span><b>Allergy ingredients</b></span><span>${state.allergiesSelected.map(id => ALLERGY_INGREDIENT_OPTIONS.find(item => item.id === id)?.label || id).join(', ')}</span></div>` : ''}
     <div class="summary-list">${state.slots.map((slot, index) => {
-    const preview = buildFinalDesignPreview(slot);
+    const preview = buildFinalDesignPreview({ ...slot, crust: slot.crust || recommended.crust, filling: slot.filling || recommended.filling });
     const combo = safeComboForPreferences(state.preference);
     const iconLabel = slot.icon ? ICONS.find(item => item.id === slot.icon)?.label : 'None';
-    const details = [slot.shape, slot.crust || 'None', slot.filling || 'None', slot.icon ? iconLabel : 'None', slot.letters || 'None'];
+    const details = [slot.shape || 'round', slot.crust || recommended.crust, slot.filling || recommended.filling, slot.icon ? iconLabel : 'None', slot.letters || 'None'];
     return `
       <div class="summary-item">
         <div class="summary-thumb">
@@ -942,7 +946,7 @@ function refreshPage3IfOpen(){
 }
 
 function init(){
-  state.slots = Array.from({ length: SETS[state.set].slots }, () => ({ shape: 'round', icon: '', letters: '' }));
+  setSlotDefaults(SETS[state.set].slots);
 
   renderSteps(1);
   renderSetRow();
@@ -1109,5 +1113,128 @@ function init(){
 
 init();
 </script>
-</body>
-</html>
+<!-- Reservation modal placed before closing body -->
+<div id="reserveModal" style="display:none;position:fixed;inset:0;z-index:1200;align-items:center;justify-content:center;padding:20px;">
+  <div style="max-width:520px;width:100%;background:#fff;border-radius:16px;border:2px solid #211b17;box-shadow:10px 12px 0 rgba(33,27,23,.08);overflow:hidden;">
+    <div style="padding:20px 22px;background:var(--paper);display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(33,27,23,.06);">
+      <div style="width:52px;height:52px;flex:0 0 auto;"><img src="dogfoodlogo.png" alt="Pet Lab" style="width:100%;height:100%;object-fit:contain;display:block;"/></div>
+      <div>
+        <div style="font-family:'Baloo 2',cursive;font-size:18px;">Reserve pre-order</div>
+        <div style="font-size:12px;color:#5b5046;">Almost done — confirm and message us on WhatsApp to complete.</div>
+      </div>
+      <button id="reserveModalClose" style="margin-left:auto;background:transparent;border:none;font-size:20px;cursor:pointer;padding:6px 10px;">×</button>
+    </div>
+    <div style="padding:18px;">
+      <div id="reserveModalSummary" style="font-size:13px;color:#4d4036;line-height:1.45;margin-bottom:12px;">Preparing your order summary…</div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;align-items:center;">
+        <button id="reserveConfirmBtn" class="btn primary">Confirm & WhatsApp</button>
+        <button id="reserveCancelBtn" class="btn" style="background:#fff;border:2px solid #211b17;">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <script>
+  (function(){
+    const SUPABASE_URL = 'https://xjkkgzqztqrdfcexeplq.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqa2tnenF6dHFyZGZjZXhlcGxxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTg1MzgsImV4cCI6MjEwMTk5NDUzOH0.nWhTMDxv5qjuANeIdR3F7RoXktVdfLzuDmb34vUzrxk';
+    const reserveBtn = document.getElementById('reservePreorderBtn');
+    const modal = document.getElementById('reserveModal');
+    const closeBtn = document.getElementById('reserveModalClose');
+    const cancelBtn = document.getElementById('reserveCancelBtn');
+    const confirmBtn = document.getElementById('reserveConfirmBtn');
+    const summaryEl = document.getElementById('reserveModalSummary');
+
+    function generateOrderCode(){
+      const t = Date.now().toString(36).toUpperCase();
+      const r = Math.random().toString(36).slice(2,6).toUpperCase();
+      return `PL-${t}-${r}`;
+    }
+
+    function buildOrderPayload(){
+      const workshop = document.getElementById('addWorkshop')?.checked || false;
+      const currentState = window.PETLAB_STATE || {};
+      return {
+        code: generateOrderCode(),
+        created_at: new Date().toISOString(),
+        set: currentState.set || null,
+        slots: currentState.slots || [],
+        preference: currentState.preference || [],
+        allergies: currentState.allergiesSelected || [],
+        activity: currentState.activityLevel || null,
+        workshop: workshop,
+        total: document.getElementById('grandTotal') ? document.getElementById('grandTotal').textContent : null
+      };
+    }
+
+    function openModal(){
+      const payload = buildOrderPayload();
+      // store payload so same code is used on confirm
+      modal.dataset.payload = JSON.stringify(payload);
+      const summary = [];
+      summary.push(`Code: ${payload.code}`);
+      summary.push(`Set: ${payload.set} (slots: ${payload.slots.length})`);
+      summary.push(`Workshop: ${payload.workshop ? 'Yes' : 'No'}`);
+      summaryEl.textContent = summary.join(' · ');
+      modal.style.display = 'flex';
+    }
+
+    function closeModal(){ modal.style.display = 'none'; }
+
+    if(reserveBtn){
+      reserveBtn.addEventListener('click', function(e){ e.preventDefault(); openModal(); });
+    }
+    if(closeBtn) closeBtn.addEventListener('click', closeModal);
+    if(cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    confirmBtn && confirmBtn.addEventListener('click', async function(){
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Saving…';
+      let payload = {};
+      try{
+        payload = JSON.parse(modal.dataset.payload || '{}');
+      } catch(e){ console.error(e); }
+
+      const phone = '85284960747';
+      const code = payload.code || generateOrderCode();
+      const msg = `Hi Elevatefoods! I've made an order from petlab website: ${code}`;
+      const waUrl = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+      const whatsappWindow = window.open('about:blank', '_blank');
+
+      // Save to Supabase with public anon credentials.
+      try{
+        if(SUPABASE_URL && SUPABASE_ANON_KEY){
+          const url = SUPABASE_URL.replace(/\/$/, '') + '/rest/v1/orders';
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify(payload)
+          });
+          if(!res.ok){
+            console.warn('Supabase save failed', res.status, await res.text());
+          }
+        } else {
+          console.warn('Supabase configuration missing. Set SUPABASE_URL and SUPABASE_ANON_KEY.');
+        }
+      }catch(err){
+        console.error('Error saving to Supabase', err);
+      }
+
+      closeModal();
+      if(whatsappWindow){
+        whatsappWindow.location.href = waUrl;
+      } else {
+        window.location.href = waUrl;
+      }
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Confirm & WhatsApp';
+    });
+
+  })();
+  </script>
+  </body>
+  </html>
