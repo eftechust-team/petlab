@@ -1191,7 +1191,7 @@ init();
 
       const phone = '85284960747';
       const code = payload.code || generateOrderCode();
-      const msg = `Hi Elevatefoods! I've made an order from petlab website: ${code}`;
+      const msg = `Hi Elevatefoods! I've made an order from EF-petlab website: [code]`;
       const waUrl = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
       const whatsappWindow = window.open('about:blank', '_blank');
 
